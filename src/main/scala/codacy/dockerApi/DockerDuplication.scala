@@ -35,12 +35,19 @@ abstract class DockerDuplication(runner: IDuplicationImpl) {
   def main(args: Array[String]): Unit = {
     initTimeout(timeout)
 
-    config.flatMap(config =>
-      runner(
-        path = sourcePath,
-        config = config.duplication
-      )
-    ) match {
+    config.flatMap { config =>
+      try {
+        runner.apply(
+          path = sourcePath,
+          config = config.duplication
+        )
+      } catch {
+        // We need to catch Throwable here to avoid JVM crashes
+        // Crashes can lead to docker not exiting properly
+        case e: Throwable =>
+          Failure(e)
+      }
+    } match {
       case Success(clones) =>
         clones.foreach { clone =>
           val relativizedClone = clone.copy(files = clone.files.map {
@@ -49,6 +56,7 @@ abstract class DockerDuplication(runner: IDuplicationImpl) {
           })
           logResult(relativizedClone)
         }
+
         Runtime.getRuntime.halt(0)
 
       case Failure(error) =>
