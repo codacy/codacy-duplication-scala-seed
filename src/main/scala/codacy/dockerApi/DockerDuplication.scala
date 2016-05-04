@@ -22,7 +22,7 @@ abstract class DockerDuplication(runner: IDuplicationImpl) {
 
   lazy val timeout = Option(System.getProperty("timeout")).flatMap { case rawDuration =>
     Try(Duration(rawDuration)).toOption.collect { case d: FiniteDuration => d }
-  }.getOrElse(30.minutes)
+  }.getOrElse(10.minutes)
 
   lazy val isDebug = Option(System.getProperty("debug")).flatMap { case rawDebug =>
     Try(rawDebug.toBoolean).toOption
