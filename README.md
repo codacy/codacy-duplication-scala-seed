@@ -21,7 +21,94 @@ and everything is well explained in our Docs section.
 
 ## Docs
 
-> TODO
+**How to integrate an external duplication tool on Codacy**
+
+By creating a docker and writing code to handle the tool invocation and output,
+you can integrate the tool of your choice on Codacy!
+
+> To know more about dockers, and how to write a docker file please refer to [https://docs.docker.com/reference/builder/](https://docs.docker.com/reference/builder/)
+
+We use external tools at Codacy, in this tutorial, we explain how you can integrate the duplication tool of your choice in Codacy.
+You can check the code of an already implemented tool and if you wish fork it to start yours.
+You are free to modify it and use it for your integration.
+
+#### Requirements
+
+* Docker definition with the tool you want to integrate
+
+#### Assumptions and Behaviour
+
+* To run the tool we provide the configuration file, `/src/.codacyrc`, with the language to run and optional parameters your tool might need.
+* The files to analyse are located in `/src`, meaning that when provided in the configuration, the paths are relative to `/src.
+
+* **.codacyrc**
+  * **duplication:**
+    * **language:** Language to run the tool
+    * **params:** Object with key/value parameters
+
+```json
+{
+  "duplication": {
+    "language": "Scala",
+    "params": { 
+      "maxTokens": 5
+    }
+  }
+}
+```
+
+#### Output
+
+You are free to write this code in the language you want.
+After you have your results from the tool, you should print them to the standard output in our **Result** format, one result per line.
+
+```json
+{
+  "cloneLines": "case class Foo(bar: Int)",
+  "nrTokens": 2,
+  "nrLines": 1,
+  "files": [ 
+    { "filePath": "path/to/my/file1.scala", "startLine": 1, "endLine": 2 },
+    { "filePath": "path/to/my/file2.scala", "startLine": 5, "endLine": 6 }
+  ]
+}
+```
+
+> The filename should not include the prefix `/src/`
+  Example:
+    * absolute path: `/src/folder/file.js`
+    * filename path: `folder/file.js`
+
+#### Submit the Docker
+
+**Running the docker**
+
+```sh
+docker run -t \
+    --net=none \
+    --privileged=false \
+    --cap-drop=ALL \
+    --user=docker \
+    --rm=true \
+    -v <PATH-TO-FOLDER-WITH-FILES-TO-CHECK>:/src \
+    -v <PATH-TO-CODACY-CONFIG-RC>:/src/.codacyrc \
+    <YOUR-DOCKER-NAME>:<YOUR-DOCKER-VERSION>
+```
+
+**Docker restrictions**
+
+    * Docker image size should not exceed 500MB
+    * Docker should contain a non-root user named docker with UID/GID 2004
+    * All the source code of the docker must be public
+    * The docker base must officially supported on DockerHub
+    * Your docker must be provided in a repository through a public git host (ex: GitHub, Bitbucket, ...)
+
+**Docker submission**
+
+    * To submit the docker you should send an email to `team [at] codacy [dot] com` with the link to the git repository with your docker definition.
+    * The docker will then be subjected to a review by our team and you will then be contacted with more details
+
+If you have any question or suggestion regarding this guide let us know.
 
 ## Test
 
