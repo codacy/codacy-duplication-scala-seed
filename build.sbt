@@ -48,14 +48,14 @@ publishTo := {
 organizationName := "Codacy"
 organizationHomepage := Some(new URL("https://www.codacy.com"))
 startYear := Some(2016)
-description := "Library to develop Codacy metrics plugins"
+description := "Library to develop Codacy duplication plugins"
 licenses := Seq("The Apache Software License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-homepage := Some(url("http://www.github.com/codacy/codacy-metrics-scala-seed/"))
+homepage := Some(url("http://www.github.com/codacy/codacy-duplication-scala-seed/"))
 pomExtra :=
   <scm>
-    <url>http://www.github.com/codacy/codacy-metrics-scala-seed</url>
-    <connection>scm:git:git@github.com:codacy/codacy-metrics-scala-seed.git</connection>
-    <developerConnection>scm:git:https://github.com/codacy/codacy-metrics-scala-seed.git</developerConnection>
+    <url>http://www.github.com/codacy/codacy-duplication-scala-seed</url>
+    <connection>scm:git:git@github.com:codacy/codacy-duplication-scala-seed.git</connection>
+    <developerConnection>scm:git:https://github.com/codacy/codacy-duplication-scala-seed.git</developerConnection>
   </scm>
     <developers>
       <developer>
