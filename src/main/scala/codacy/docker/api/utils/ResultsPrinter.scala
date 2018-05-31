@@ -5,16 +5,14 @@ import java.io.PrintStream
 import codacy.docker.api.duplication.DuplicationClone
 import play.api.libs.json.Json
 
-import scala.util.Try
-
-class ResultsPrinter(resultsStream: PrintStream = Console.out, logStream: PrintStream = Console.err) {
-
-  lazy val isDebug: Boolean = Option(System.getProperty("debug")).flatMap { rawDebug =>
-    Try(rawDebug.toBoolean).toOption
-  }.getOrElse(false)
+class ResultsPrinter(resultsStream: PrintStream = Console.out,
+                     logStream: PrintStream = Console.err,
+                     isDebug: Boolean = false) {
 
   def log(message: String): Unit = {
-    logStream.println(message)
+    if (isDebug) {
+      logStream.println(message)
+    }
   }
 
   def logStackTrace(error: Throwable): Unit = {

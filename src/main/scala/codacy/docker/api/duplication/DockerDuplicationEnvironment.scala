@@ -41,4 +41,7 @@ class DockerDuplicationEnvironment(variables: Map[String, String] = sys.env) {
   private[this] def asFailure(error: Seq[(JsPath, Seq[JsonValidationError])]) =
     Failure(new Throwable(Json.stringify(JsError.toJson(error.toList))))
 
+  lazy val isDebug: Boolean =
+    variables.get("DUPLICATION_DEBUG").flatMap(rawDebug => Try(rawDebug.toBoolean).toOption).getOrElse(false)
+
 }
