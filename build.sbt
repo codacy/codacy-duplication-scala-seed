@@ -9,11 +9,11 @@ lazy val codacyDuplicationScalaSeed = project
   .settings(
     inThisBuild(
       List(organization := "com.codacy",
-        scalaVersion := scalaVersionNumber,
-        version := "0.1.0-SNAPSHOT",
-        scalacOptions ++= Common.compilerFlags,
-        scalacOptions in Test ++= Seq("-Yrangepos"),
-        scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"))),
+           scalaVersion := scalaVersionNumber,
+           version := "0.1.0-SNAPSHOT",
+           scalacOptions ++= Common.compilerFlags,
+           scalacOptions in Test ++= Seq("-Yrangepos"),
+           scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"))),
     name := "codacy-duplication-scala-seed",
     // App Dependencies
     libraryDependencies ++= Seq(Dependencies.playJson, Dependencies.codacyPluginsApi, Dependencies.betterFiles),
@@ -28,9 +28,9 @@ scapegoatVersion in ThisBuild := "1.3.5"
 
 // Sonatype repository settings
 credentials += Credentials("Sonatype Nexus Repository Manager",
-  "oss.sonatype.org",
-  sys.env.getOrElse("SONATYPE_USER", "username"),
-  sys.env.getOrElse("SONATYPE_PASSWORD", "password"))
+                           "oss.sonatype.org",
+                           sys.env.getOrElse("SONATYPE_USER", "username"),
+                           sys.env.getOrElse("SONATYPE_PASSWORD", "password"))
 
 publishMavenStyle := true
 publishArtifact in Test := false
