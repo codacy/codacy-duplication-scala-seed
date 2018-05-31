@@ -19,8 +19,8 @@ class DockerDuplicationSpecs extends Specification {
       //given
       val outContent = new ByteArrayOutputStream()
       val printStream = new PrintStream(outContent)
-      val dockerMetricsEnvironment = new DockerDuplicationEnvironment
-      val sourcePath = dockerMetricsEnvironment.sourcePath.toString
+      val dockerDuplicationEnvironment = new DockerDuplicationEnvironment
+      val sourcePath = dockerDuplicationEnvironment.sourcePath.toString
       val duplication = "heeyyy, i'm duplicated"
       val duplicationCloneMock =
         DuplicationClone(duplication,
@@ -67,7 +67,7 @@ class DockerDuplicationSpecs extends Specification {
           Failure(new Throwable(failedMsg))
         }
       }
-      val dockerMetrics =
+      val dockerDuplication =
         new DockerDuplication(tool = mockedDuplicationTool)(printer = new ResultsPrinter(logStream = printStream)) {
           override def halt(status: Int): Unit = {
             status must beEqualTo(1)
@@ -76,7 +76,7 @@ class DockerDuplicationSpecs extends Specification {
         }
 
       //when
-      dockerMetrics.main(Array.empty)
+      dockerDuplication.main(Array.empty)
 
       //then
       val output = outContent.toString
@@ -99,7 +99,7 @@ class DockerDuplicationSpecs extends Specification {
           Success(List.empty)
         }
       }
-      val dockerMetrics =
+      val dockerDuplication =
         new DockerDuplication(tool = duplicationTool, environment = environment)(
           printer = new ResultsPrinter(logStream = printStream)) {
           override def halt(status: Int): Unit = {
@@ -108,7 +108,7 @@ class DockerDuplicationSpecs extends Specification {
         }
 
       //when and then
-      dockerMetrics.main(Array.empty) must throwA(timeOutException)
+      dockerDuplication.main(Array.empty) must throwA(timeOutException)
     }
   }
 }

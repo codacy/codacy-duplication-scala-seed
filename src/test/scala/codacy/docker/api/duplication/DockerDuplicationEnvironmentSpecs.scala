@@ -15,7 +15,7 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
 
     val dockerDuplicationEnvironment = new DockerDuplicationEnvironment
 
-    "get the metrics configuration for the tool, given a valid json file (must read from main source)" in {
+    "get the duplication configuration for the tool, given a valid json file (must read from main source)" in {
       //given
       (for {
         tempFile <- File.temporaryFile()
@@ -39,7 +39,7 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
       }).get()
     }
 
-    "get the metrics configuration for the tool, given a valid json file (must read from alternative source)" in {
+    "get the duplication configuration for the tool, given a valid json file (must read from alternative source)" in {
       //given
       (for {
         tempFile <- File.temporaryFile()
@@ -73,11 +73,11 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
         val configPath = tempFile.path
         val notConfigPath = tempFile.path.getRoot
         //when
-        val metricsConfig =
+        val duplicationConfig =
           dockerDuplicationEnvironment.config(configPath, notConfigPath)
 
         //then
-        metricsConfig must beFailedTry
+        duplicationConfig must beFailedTry
       }).get()
     }
 

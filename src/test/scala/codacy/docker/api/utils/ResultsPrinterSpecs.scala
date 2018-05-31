@@ -9,13 +9,13 @@ import play.api.libs.json.Json
 class ResultsPrinterSpecs extends Specification {
 
   "ResultsPrinter" should {
-    "print the file metrics converted to json to the given print stream" in {
+    "print the duplication results converted to json to the given print stream" in {
       //given
       val outContent = new ByteArrayOutputStream()
       val printStream = new PrintStream(outContent)
       val printer = new ResultsPrinter(printStream)
-      val dockerMetricsEnvironment = new DockerDuplicationEnvironment
-      val sourcePath = dockerMetricsEnvironment.sourcePath.toString
+      val dockerDuplicationEnvironment = new DockerDuplicationEnvironment
+      val sourcePath = dockerDuplicationEnvironment.sourcePath.toString
       val duplication = "heeyyy, i'm duplicated"
       val duplicationClone =
         DuplicationClone(duplication,
