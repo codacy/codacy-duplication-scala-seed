@@ -27,9 +27,10 @@ class ResultsPrinterSpecs extends Specification {
       printer.printResults(List(duplicationClone), sourcePath)
 
       //then
-      Json.parse(outContent.toString) mustEqual Json.toJson(
-        duplicationClone.copy(files = duplicationClone.files.map(file =>
-          file.copy(FileHelper.stripPath(file.filePath, sourcePath)))))
+      val outputedJson = Json.parse(outContent.toString)
+      val expectedJson = Json.toJson(duplicationClone.copy(files = duplicationClone.files.map(file =>
+        file.copy(FileHelper.stripPath(file.filePath, sourcePath)))))
+      outputedJson mustEqual expectedJson
     }
   }
 }

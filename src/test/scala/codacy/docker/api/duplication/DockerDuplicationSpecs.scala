@@ -22,22 +22,22 @@ class DockerDuplicationSpecs extends Specification {
       val dockerMetricsEnvironment = new DockerDuplicationEnvironment
       val sourcePath = dockerMetricsEnvironment.sourcePath.toString
       val duplication = "heeyyy, i'm duplicated"
-      val duplicationClone =
+      val duplicationCloneMock =
         DuplicationClone(duplication,
                          duplication.length,
                          1,
                          Seq(DuplicationCloneFile(s"$sourcePath/path/to/duplicated/file", 1, 2)))
-      val duplicationTool = new DuplicationTool {
+      val mockedDuplicationTool = new DuplicationTool {
         override def apply(
           source: Source.Directory,
           language: Option[Language],
           options: Map[DuplicationConfiguration.Key, DuplicationConfiguration.Value]): Try[List[DuplicationClone]] = {
-          Success(List(duplicationClone))
+          Success(List(duplicationCloneMock))
         }
       }
 
       val dockerDuplication =
-        new DockerDuplication(tool = duplicationTool, printer = new ResultsPrinter(resultsStream = printStream)) {
+        new DockerDuplication(tool = mockedDuplicationTool)(printer = new ResultsPrinter(resultsStream = printStream)) {
           override def halt(status: Int): Unit = {
             status must beEqualTo(0)
             ()
@@ -48,9 +48,10 @@ class DockerDuplicationSpecs extends Specification {
       dockerDuplication.main(Array.empty)
 
       //then
-      Json.parse(outContent.toString) mustEqual Json.toJson(
-        duplicationClone.copy(files = duplicationClone.files.map(file =>
-          file.copy(FileHelper.stripPath(file.filePath, sourcePath)))))
+      val output = Json.parse(outContent.toString)
+      val mockedResults = Json.toJson(duplicationCloneMock.copy(files = duplicationCloneMock.files.map(file =>
+        file.copy(FileHelper.stripPath(file.filePath, sourcePath)))))
+      output mustEqual mockedResults
     }
 
     "fail if the apply method fails, print the stacktrace to the given stream and exit with the code 1" in {
@@ -58,7 +59,7 @@ class DockerDuplicationSpecs extends Specification {
       val outContent = new ByteArrayOutputStream()
       val printStream = new PrintStream(outContent)
       val failedMsg = s"Failed: ${Random.nextInt()}"
-      val duplicationTool = new DuplicationTool {
+      val mockedDuplicationTool = new DuplicationTool {
         override def apply(
           source: Source.Directory,
           language: Option[Language],
@@ -67,7 +68,7 @@ class DockerDuplicationSpecs extends Specification {
         }
       }
       val dockerMetrics =
-        new DockerDuplication(tool = duplicationTool, printer = new ResultsPrinter(logStream = printStream)) {
+        new DockerDuplication(tool = mockedDuplicationTool)(printer = new ResultsPrinter(logStream = printStream)) {
           override def halt(status: Int): Unit = {
             status must beEqualTo(1)
             ()
@@ -78,7 +79,8 @@ class DockerDuplicationSpecs extends Specification {
       dockerMetrics.main(Array.empty)
 
       //then
-      outContent.toString must contain(failedMsg)
+      val output = outContent.toString
+      output must contain(failedMsg)
     }
 
     "fail if the configured timeout on the system environment is too low" in {
@@ -98,9 +100,8 @@ class DockerDuplicationSpecs extends Specification {
         }
       }
       val dockerMetrics =
-        new DockerDuplication(tool = duplicationTool,
-                              printer = new ResultsPrinter(logStream = printStream),
-                              environment = environment) {
+        new DockerDuplication(tool = duplicationTool, environment = environment)(
+          printer = new ResultsPrinter(logStream = printStream)) {
           override def halt(status: Int): Unit = {
             throw timeOutException
           }
