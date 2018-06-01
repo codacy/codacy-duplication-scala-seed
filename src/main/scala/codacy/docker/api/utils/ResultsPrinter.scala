@@ -20,14 +20,11 @@ class ResultsPrinter(resultsStream: PrintStream = Console.out,
   }
 
   def printResults(results: Seq[DuplicationClone], sourcePath: String): Unit = {
-
     results.foreach { result =>
-      resultsStream.println(Json.stringify(Json.toJson(result.copy(files = result.files.map(file =>
-        file.copy(filePath = stripSourcePath(file.filePath, sourcePath)))))))
+      val relativizedDuplicationClone =
+        result.copy(
+          files = result.files.map(file => file.copy(filePath = FileHelper.stripPath(file.filePath, sourcePath))))
+      resultsStream.println(Json.stringify(Json.toJson(relativizedDuplicationClone)))
     }
-  }
-
-  private def stripSourcePath(fullPath: String, sourcePath: String): String = {
-    FileHelper.stripPath(fullPath, sourcePath)
   }
 }
