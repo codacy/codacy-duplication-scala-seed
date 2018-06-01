@@ -8,9 +8,9 @@ import codacy.docker.api.Source.File
 import scala.language.implicitConversions
 import scala.util.Try
 
-package object duplication {
+private[this] case class DuplicationConfigurationValue(value: JsValue) extends AnyVal with Value
 
-  private[this] case class DuplicationConfigurationValue(value: JsValue) extends AnyVal with Value
+package object duplication {
 
   implicit val languageFormat: Format[Language] = Format[Language](
     Reads { json: JsValue =>
