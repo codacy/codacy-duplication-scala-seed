@@ -1,14 +1,14 @@
 package codacy.docker.api.duplication
 
 import codacy.docker.api.Source.Directory
-import codacy.docker.api.utils.{Haltable, ResultsPrinter, Timeout}
+import codacy.docker.api.utils.{Haltable, ResultsPrinter, Timeoutable}
 
 import scala.util.{Failure, Success, Try}
 
 class DockerDuplication(tool: DuplicationTool,
                         environment: DockerDuplicationEnvironment = new DockerDuplicationEnvironment)(
   printer: ResultsPrinter = new ResultsPrinter(isDebug = environment.isDebug))
-    extends Timeout
+    extends Timeoutable
     with Haltable {
 
   def main(args: Array[String]): Unit = {

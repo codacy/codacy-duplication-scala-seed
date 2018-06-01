@@ -6,7 +6,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Future, Promise}
 import scala.util.Try
 
-trait Timeout {
+trait Timeoutable {
 
   def onTimeout[T](delay: Duration)(onTimeout: => T): Future[T] = {
     val promise = Promise[T]()
