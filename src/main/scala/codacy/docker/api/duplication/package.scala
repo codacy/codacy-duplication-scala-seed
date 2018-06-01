@@ -10,6 +10,8 @@ import scala.util.Try
 
 package object duplication {
 
+  private[this] case class DuplicationConfigurationValue(value: JsValue) extends AnyVal with Value
+
   implicit val languageFormat: Format[Language] = Format[Language](
     Reads { json: JsValue =>
       json.validate[String].flatMap { langStr =>
@@ -38,13 +40,13 @@ package object duplication {
       Value(Try(Json.parse(raw)).getOrElse(JsString(raw)))
   }
 
-  implicit lazy val configurationValueFormat: Format[Value] =
+  implicit val configurationValueFormat: Format[Value] =
     Format(implicitly[Reads[JsValue]].map(DuplicationConfigurationValue), Writes(configurationValueToJsValue))
 
-  implicit lazy val configurationOptionsKeyFormat: OFormat[Key] =
+  implicit val configurationOptionsKeyFormat: OFormat[Key] =
     Json.format[Key]
 
-  implicit lazy val configurationOptionsFormat: Format[Map[Key, Value]] =
+  implicit val configurationOptionsFormat: Format[Map[Key, Value]] =
     Format[Map[Key, Value]](
       Reads { json: JsValue =>
         JsSuccess(json.asOpt[Map[String, JsValue]].fold(Map.empty[Key, Value]) {
@@ -67,5 +69,3 @@ package object duplication {
   implicit val codacyCfgFmt: OFormat[CodacyConfiguration] = Json.format[CodacyConfiguration]
 
 }
-
-private[this] case class DuplicationConfigurationValue(value: JsValue) extends AnyVal with Value
