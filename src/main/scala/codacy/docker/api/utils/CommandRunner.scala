@@ -1,11 +1,11 @@
-package codacy.dockerApi.utils
+package codacy.docker.api.utils
 
 import java.io._
 import java.nio.charset.CodingErrorAction
 
 import scala.collection.mutable
 import scala.io.{Codec, Source}
-import scala.language.postfixOps
+
 import scala.sys.process._
 import scala.util.{Failure, Success, Try}
 
@@ -40,9 +40,9 @@ object CommandRunner {
     codec.onMalformedInput(CodingErrorAction.IGNORE)
     codec.onUnmappableCharacter(CodingErrorAction.IGNORE)
 
-    Source.fromInputStream(stream)
-      .getLines()
-      .foreach { line => buffer += line }
+    Source.fromInputStream(stream).getLines().foreach { line =>
+      buffer += line
+    }
     stream.close()
   }
 
