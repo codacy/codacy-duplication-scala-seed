@@ -12,7 +12,7 @@ class DockerDuplication(tool: DuplicationTool,
     with Haltable {
 
   def main(args: Array[String]): Unit = {
-    initTimeout(environment.timeout) {
+    onTimeout(environment.timeout) {
       printer.log(s"timed out after ${environment.timeout} ")
       halt(2)
     }

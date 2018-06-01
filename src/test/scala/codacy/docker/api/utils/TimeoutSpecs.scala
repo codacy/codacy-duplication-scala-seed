@@ -9,16 +9,16 @@ class TimeoutSpecs extends Specification with Timeout {
 
   "Timeout" should {
     "should throw exception" in {
-      val f = initTimeout(100.seconds) {
-        failure("It should fail because a timeoutException wasn't thrown.")
+      val f = onTimeout(100.seconds) {
+        failure("Await.result didn't throw a scala.concurrent.TimeoutException.")
       }
 
       Await.result(f, 1.second) must throwA[TimeoutException]
     }
 
     "shouldn't throw exception" in {
-      val f = initTimeout(1.seconds) {
-        success("The delay didn't throw a TimeoutException exception")
+      val f = onTimeout(1.seconds) {
+        success("Await.result didn't throw a scala.concurrent.TimeoutException")
       }
 
       Await.result(f, Duration.Inf) must not(throwA[TimeoutException])

@@ -8,7 +8,7 @@ import scala.util.Try
 
 trait Timeout {
 
-  def initTimeout[T](delay: Duration)(onTimeout: => T): Future[T] = {
+  def onTimeout[T](delay: Duration)(onTimeout: => T): Future[T] = {
     val promise = Promise[T]()
     val t = new Timer()
     t.schedule(new TimerTask {
