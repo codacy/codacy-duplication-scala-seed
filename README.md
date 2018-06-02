@@ -3,7 +3,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/bc3a79d1b12649158a1eb4758e872141)](https://www.codacy.com/app/Codacy/codacy-duplication-scala-seed)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/b85f7d351cd44a96ad95dbbff1305ccc)](https://www.codacy.com/app/Codacy/codacy-duplication-scala-seed?utm_source=github.com&utm_medium=referral&utm_content=codacy/codacy-duplication-scala-seed&utm_campaign=Badge_Coverage)
 [![Build Status](https://circleci.com/gh/codacy/codacy-duplication-scala-seed.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/codacy/codacy-duplication-scala-seed)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.codacy/codacy-duplication-scala-seed_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.codacy/codacy-duplication-scala-seed_2.11)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.codacy/codacy-duplication-scala-seed_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.codacy/codacy-duplication-scala-seed_2.12)
 
 We use external tools at Codacy, this is the library we use across the multiple external tools integrations.
 For more details and examples of tools that use this project, you can check
