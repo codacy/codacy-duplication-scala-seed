@@ -1,11 +1,10 @@
-package codacy.docker.api.utils
+package com.codacy.duplication.scala.seed.utils
 
 import java.io._
 import java.nio.charset.CodingErrorAction
 
 import scala.collection.mutable
 import scala.io.{Codec, Source}
-
 import scala.sys.process._
 import scala.util.{Failure, Success, Try}
 

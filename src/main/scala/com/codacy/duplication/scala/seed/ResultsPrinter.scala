@@ -1,8 +1,9 @@
-package codacy.docker.api.utils
+package com.codacy.duplication.scala.seed
 
 import java.io.PrintStream
 
-import codacy.docker.api.duplication.DuplicationClone
+import com.codacy.duplication.scala.seed.utils.FileHelper
+import com.codacy.plugins.api.duplication.DuplicationClone
 import play.api.libs.json.Json
 
 class ResultsPrinter(resultsStream: PrintStream = Console.out,

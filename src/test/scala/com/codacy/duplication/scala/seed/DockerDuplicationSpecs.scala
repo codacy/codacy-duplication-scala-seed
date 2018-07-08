@@ -1,10 +1,11 @@
-package codacy.docker.api.duplication
+package com.codacy.duplication.scala.seed
 
 import java.io.{ByteArrayOutputStream, PrintStream}
 
-import codacy.docker.api.utils.{FileHelper, ResultsPrinter}
-import codacy.docker.api.{DuplicationConfiguration, Source}
-import com.codacy.api.dtos.Language
+import com.codacy.duplication.scala.seed.utils.FileHelper
+import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile, DuplicationTool}
+import com.codacy.plugins.api.languages.Language
+import com.codacy.plugins.api.{Options, Source}
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json
 
@@ -31,7 +32,7 @@ class DockerDuplicationSpecs extends Specification {
         override def apply(
           source: Source.Directory,
           language: Option[Language],
-          options: Map[DuplicationConfiguration.Key, DuplicationConfiguration.Value]): Try[List[DuplicationClone]] = {
+          options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
           Success(List(duplicationCloneMock))
         }
       }
@@ -63,7 +64,7 @@ class DockerDuplicationSpecs extends Specification {
         override def apply(
           source: Source.Directory,
           language: Option[Language],
-          options: Map[DuplicationConfiguration.Key, DuplicationConfiguration.Value]): Try[List[DuplicationClone]] = {
+          options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
           Failure(new Throwable(failedMsg))
         }
       }
@@ -94,7 +95,7 @@ class DockerDuplicationSpecs extends Specification {
         def apply(
           source: Source.Directory,
           language: Option[Language],
-          options: Map[DuplicationConfiguration.Key, DuplicationConfiguration.Value]): Try[List[DuplicationClone]] = {
+          options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
           Thread.sleep(3.seconds.toMillis)
           Success(List.empty)
         }

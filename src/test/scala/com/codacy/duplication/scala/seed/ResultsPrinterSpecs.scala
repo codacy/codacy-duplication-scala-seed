@@ -1,8 +1,9 @@
-package codacy.docker.api.utils
+package com.codacy.duplication.scala.seed
 
 import java.io.{ByteArrayOutputStream, PrintStream}
 
-import codacy.docker.api.duplication.{DockerDuplicationEnvironment, DuplicationClone, DuplicationCloneFile}
+import com.codacy.duplication.scala.seed.utils.FileHelper
+import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile}
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json
 

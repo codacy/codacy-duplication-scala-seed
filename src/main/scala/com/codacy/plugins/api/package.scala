@@ -1,16 +1,17 @@
-package codacy.docker.api
+package com.codacy.plugins
 
-import com.codacy.api.dtos.{Language, Languages}
+import com.codacy.plugins.api.Options.{Key, Value}
+import com.codacy.plugins.api.Source.File
+import com.codacy.plugins.api.duplication.DuplicationTool.CodacyConfiguration
+import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile}
+import com.codacy.plugins.api.languages.{Language, Languages}
 import play.api.libs.json._
-import codacy.docker.api.DuplicationConfiguration.{Key, Value}
-import codacy.docker.api.Source.File
 
 import scala.language.implicitConversions
 import scala.util.Try
 
-private[this] case class DuplicationConfigurationValue(value: JsValue) extends AnyVal with Value
 
-package object duplication {
+package object api {
 
   implicit val languageFormat: Format[Language] = Format[Language](
     Reads { json: JsValue =>
@@ -32,7 +33,7 @@ package object duplication {
     }
   }
 
-  implicit class ConfigurationExtensions(config: DuplicationConfiguration.type) {
+  implicit class ConfigurationExtensions(config: Options.type) {
     def Value(jsValue: JsValue): Value =
       DuplicationConfigurationValue(jsValue)
 
@@ -65,7 +66,9 @@ package object duplication {
 
   implicit val dupCloneFileFmt: OFormat[DuplicationCloneFile] = Json.format[DuplicationCloneFile]
   implicit val dupCloneFmt: OFormat[DuplicationClone] = Json.format[DuplicationClone]
-  implicit val dupCfgFmt: OFormat[DuplicationConfiguration] = Json.format[DuplicationConfiguration]
   implicit val codacyCfgFmt: OFormat[CodacyConfiguration] = Json.format[CodacyConfiguration]
 
 }
+
+final private[this] case class DuplicationConfigurationValue(value: JsValue) extends AnyVal with Value
+
