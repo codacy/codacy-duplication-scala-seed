@@ -10,7 +10,6 @@ import play.api.libs.json._
 import scala.language.implicitConversions
 import scala.util.Try
 
-
 package object api {
 
   implicit val languageFormat: Format[Language] = Format[Language](
@@ -71,4 +70,3 @@ package object api {
 }
 
 final private[this] case class DuplicationConfigurationValue(value: JsValue) extends AnyVal with Value
-

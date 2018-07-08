@@ -29,10 +29,9 @@ class DockerDuplicationSpecs extends Specification {
                          1,
                          Seq(DuplicationCloneFile(s"$sourcePath/path/to/duplicated/file", 1, 2)))
       val mockedDuplicationTool = new DuplicationTool {
-        override def apply(
-          source: Source.Directory,
-          language: Option[Language],
-          options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
+        override def apply(source: Source.Directory,
+                           language: Option[Language],
+                           options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
           Success(List(duplicationCloneMock))
         }
       }
@@ -61,10 +60,9 @@ class DockerDuplicationSpecs extends Specification {
       val printStream = new PrintStream(outContent)
       val failedMsg = s"Failed: ${Random.nextInt()}"
       val mockedDuplicationTool = new DuplicationTool {
-        override def apply(
-          source: Source.Directory,
-          language: Option[Language],
-          options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
+        override def apply(source: Source.Directory,
+                           language: Option[Language],
+                           options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
           Failure(new Throwable(failedMsg))
         }
       }
@@ -92,10 +90,9 @@ class DockerDuplicationSpecs extends Specification {
       val timeOutException = new TimeoutException(s"Duplication tool timed out after: $timeOutValue")
       val environment = new DockerDuplicationEnvironment(Map("DUPLICATION_TIMEOUT" -> timeOutValue))
       val duplicationTool = new DuplicationTool {
-        def apply(
-          source: Source.Directory,
-          language: Option[Language],
-          options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
+        def apply(source: Source.Directory,
+                  language: Option[Language],
+                  options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
           Thread.sleep(3.seconds.toMillis)
           Success(List.empty)
         }
