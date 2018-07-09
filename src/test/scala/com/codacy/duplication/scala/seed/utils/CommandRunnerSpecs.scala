@@ -1,4 +1,4 @@
-package codacy.docker.api.utils
+package com.codacy.duplication.scala.seed.utils
 
 import org.specs2.mutable.Specification
 

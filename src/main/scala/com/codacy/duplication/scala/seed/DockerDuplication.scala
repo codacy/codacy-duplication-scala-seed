@@ -1,7 +1,8 @@
-package codacy.docker.api.duplication
+package com.codacy.duplication.scala.seed
 
-import codacy.docker.api.Source.Directory
-import codacy.docker.api.utils.{Haltable, ResultsPrinter, Timeoutable}
+import com.codacy.duplication.scala.seed.traits.{Haltable, Timeoutable}
+import com.codacy.plugins.api.Source.Directory
+import com.codacy.plugins.api.duplication._
 
 import scala.util.{Failure, Success, Try}
 
@@ -21,8 +22,8 @@ class DockerDuplication(tool: DuplicationTool,
       config <- environment.config()
       results <- withNativeTry[Seq[DuplicationClone]](
         tool.apply(path = Directory(environment.sourcePath.toString),
-                   language = config.duplication.language,
-                   options = config.duplication.params.getOrElse(Map.empty)))
+                   language = config.language,
+                   options = config.params.getOrElse(Map.empty)))
     } yield results) match {
       case Success(clones: Seq[DuplicationClone]) =>
         printer.printResults(clones, environment.sourcePath.toString)

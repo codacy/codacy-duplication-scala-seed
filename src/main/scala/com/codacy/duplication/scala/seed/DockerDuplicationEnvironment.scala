@@ -1,13 +1,12 @@
-package codacy.docker.api.duplication
+package com.codacy.duplication.scala.seed
 
 import java.nio.file.{Files, Path, Paths}
 
 import better.files.File
-import codacy.docker.api.{CodacyConfiguration, DuplicationConfiguration}
+import com.codacy.plugins.api.duplication.DuplicationTool._
 import play.api.libs.json.{JsError, JsPath, Json, JsonValidationError}
 
-import scala.concurrent.duration._
-import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.concurrent.duration.{Duration, FiniteDuration, _}
 import scala.util.{Failure, Success, Try}
 
 class DockerDuplicationEnvironment(variables: Map[String, String] = sys.env) {
@@ -32,7 +31,7 @@ class DockerDuplicationEnvironment(variables: Map[String, String] = sys.env) {
     val rawConfig: Try[Array[Byte]] = getConfigurationFromFile(configPath, alternateConfigPath)
     rawConfig.transform(
       raw => Try(Json.parse(raw)).flatMap(_.validate[CodacyConfiguration].fold(asFailure, conf => Success(conf))),
-      _ => Try(CodacyConfiguration(DuplicationConfiguration(None, None))))
+      _ => Try(CodacyConfiguration(None, None)))
   }
   private def getConfigurationFromFile(configPath: Path, alternateConfigPath: Path): Try[Array[Byte]] = {
     Try(Files.readAllBytes(configPath)).recoverWith {

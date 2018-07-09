@@ -1,4 +1,4 @@
-package codacy.docker.api.utils
+package com.codacy.duplication.scala.seed.traits
 
 trait Haltable {
 
