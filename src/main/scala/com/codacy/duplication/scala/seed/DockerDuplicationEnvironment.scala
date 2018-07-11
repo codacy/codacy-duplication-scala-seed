@@ -17,14 +17,14 @@ class DockerDuplicationEnvironment(variables: Map[String, String] = sys.env) {
   private val dockerRootConfigFilePath = dockerRootPath.resolve(".codacyrc")
 
   val timeout: FiniteDuration = variables
-    .get("DUPLICATION_TIMEOUT")
+    .get("TIMEOUT")
     .flatMap { rawDuration =>
       Try(Duration(rawDuration)).toOption.collect { case d: FiniteDuration => d }
     }
-    .getOrElse(10.minutes)
+    .getOrElse(15.minutes)
 
   val isDebug: Boolean =
-    variables.get("DUPLICATION_DEBUG").flatMap(rawDebug => Try(rawDebug.toBoolean).toOption).getOrElse(false)
+    variables.get("DEBUG").flatMap(rawDebug => Try(rawDebug.toBoolean).toOption).getOrElse(false)
 
   def config(configPath: Path = configFilePath,
              alternateConfigPath: Path = dockerRootConfigFilePath): Try[CodacyConfiguration] = {
