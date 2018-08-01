@@ -1,15 +1,16 @@
 package com.codacy.duplication.scala.seed
 
-import com.codacy.duplication.scala.seed.traits.{Haltable, Timeoutable}
+import com.codacy.duplication.scala.seed.traits.{Delayed, Haltable}
 import com.codacy.plugins.api.Source.Directory
-import com.codacy.plugins.api.duplication._
+import com.codacy.plugins.api.docker.v2.DuplicationResult
+import com.codacy.plugins.api.duplication.DuplicationTool
 
 import scala.util.{Failure, Success, Try}
 
-class DockerDuplication(tool: DuplicationTool,
+class DockerDuplication(tool: DuplicationTool[DuplicationResult],
                         environment: DockerDuplicationEnvironment = new DockerDuplicationEnvironment)(
   printer: ResultsPrinter = new ResultsPrinter(isDebug = environment.isDebug))
-    extends Timeoutable
+    extends Delayed
     with Haltable {
 
   def main(args: Array[String]): Unit = {
@@ -20,12 +21,12 @@ class DockerDuplication(tool: DuplicationTool,
 
     (for {
       config <- environment.config()
-      results <- withNativeTry[Seq[DuplicationClone]](
+      results <- withNativeTry[List[DuplicationResult]](
         tool.apply(path = Directory(environment.sourcePath.toString),
                    language = config.language,
                    options = config.params.getOrElse(Map.empty)))
     } yield results) match {
-      case Success(clones: Seq[DuplicationClone]) =>
+      case Success(clones: Seq[DuplicationResult]) =>
         printer.printResults(clones, environment.sourcePath.toString)
         halt(0)
 

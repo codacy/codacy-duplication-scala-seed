@@ -3,10 +3,11 @@ import sbt._
 object Dependencies {
 
   val playJson = "com.typesafe.play" %% "play-json" % "2.6.9"
-  val codacyPluginsApi = "com.codacy" %% "codacy-plugins-api" % "3.0.96" withSources ()
+  val codacyPluginsApi = "com.codacy" %% "codacy-plugins-api" % "0.1.0-pre.versioned-api-SNAPSHOT" withSources ()
   val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
-
   val specs2Version = "4.2.0"
+  val playJsonDerivedCodecs = "org.julienrf" %% "play-json-derived-codecs" % "4.0.1"
+
   lazy val specs2 = Seq("org.specs2" %% "specs2-core" % specs2Version)
 
 }

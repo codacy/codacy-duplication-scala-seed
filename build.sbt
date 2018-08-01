@@ -16,7 +16,7 @@ lazy val codacyDuplicationScalaSeed = project
            scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"))),
     name := "codacy-duplication-scala-seed",
     // App Dependencies
-    libraryDependencies ++= Seq(Dependencies.playJson, Dependencies.codacyPluginsApi, Dependencies.betterFiles),
+    libraryDependencies ++= Seq(Dependencies.playJson, Dependencies.codacyPluginsApi, Dependencies.betterFiles, Dependencies.playJsonDerivedCodecs),
     // Test Dependencies
     libraryDependencies ++= Dependencies.specs2.map(_ % Test))
 
