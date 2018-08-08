@@ -3,7 +3,8 @@ package com.codacy.duplication.scala.seed
 import java.io.{ByteArrayOutputStream, PrintStream}
 
 import com.codacy.duplication.scala.seed.utils.FileHelper
-import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile}
+import com.codacy.plugins.api.Implicits._
+import com.codacy.plugins.api.docker.v2.DuplicationResult
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json
 
@@ -19,10 +20,10 @@ class ResultsPrinterSpecs extends Specification {
       val sourcePath = dockerDuplicationEnvironment.sourcePath.toString
       val duplication = "heeyyy, i'm duplicated"
       val duplicationClone =
-        DuplicationClone(duplication,
-                         duplication.length,
-                         1,
-                         Seq(DuplicationCloneFile(s"$sourcePath/path/to/duplicated/file", 1, 2)))
+        DuplicationResult.Clone(duplication,
+                                duplication.length,
+                                1,
+                                Seq(DuplicationResult.CloneFile(s"$sourcePath/path/to/duplicated/file", 1, 2)))
 
       //when
       printer.printResults(List(duplicationClone), sourcePath)

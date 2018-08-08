@@ -14,7 +14,7 @@ For more details and examples of tools that use this project, you can check
 Add to your SBT dependencies:
 
 ```scala
-"com.codacy" %% "codacy-duplication-scala-seed" % "1.0.0-SNAPSHOT"
+"com.codacy" %% "codacy-duplication-scala-seed" % "<VERSION>"
 ```
 
 You shouldn't worry about the library itself, we use it as a core in our tools,
@@ -59,12 +59,19 @@ You are free to modify it and use it for your integration.
 ```
 
 ## Output
-
+[//]: # (TODO: review these types)
 You are free to write this code in the language you want.
-After you have your results from the tool, you should print them to the standard output in our **Result** format, one result per line.
+After you have your results from the tool, you should print them to the standard output in our **DuplicationResult** format, one result per line.
+You should be careful to always set a $type attribute in two situations: 
+* In the root of the DuplicationResult, indicating whether the result should be parsed as a Clone or a Problem. The allowed values for this field are:
+    * For a clone use ``com.codacy.plugins.api.docker.v2.DuplicationResult$Clone``
+    * For an error/warning use ``com.codacy.plugins.api.docker.v2.DuplicationResult$Problem``
+* In the root of the reason for an error/warning (you can find a detailed description of the different types of reason after the example for this case below)
 
+In the case you want to output an instance of duplication you should comply to the following format:
 ```json
 {
+  "$type": "com.codacy.plugins.api.docker.v2.DuplicationResult$Clone",
   "cloneLines": "case class Foo(bar: Int)",
   "nrTokens": 2,
   "nrLines": 1,
@@ -74,6 +81,58 @@ After you have your results from the tool, you should print them to the standard
   ]
 }
 ```
+
+In the case you want to output an error/warning with the execution, you should format your response according to:
+```json
+{
+  "$type": "com.codacy.plugins.api.docker.v2.DuplicationResult$Problem",
+  "file": "path/to/my/file1.scala",
+  "reason": {
+    "$type": "com.codacy.plugins.api.docker.v2.Problem$Reason$FileError"
+  }
+}
+```
+
+For the latter situation, the expected reasons for an error/warning outputed by the tool should comply to one of the 
+* Missing Configuration - when the configuration file for the tool cannot be found (if it is needed by the tool):
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$MissingConfiguration``
+    * ``supportedFilename`` - an array of strings containing the file names that are supported for the configuration file
+* Invalid Configuration - when the configuration file for the tool does not comply to the expected format 
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$InvalidConfiguration``
+    * ``unsupportedPatterns`` - an array of strings that encode patterns that were selected in the configuration but are not supported
+    * ``unsupportedValues`` - an array of objects that encodes invalid parameter values. These should use the following fields:
+        * ``patternId`` - the identifier of a pattern, encoded as a string
+        * ``parameterName`` - the name of the parameter that was set with an invalid value, encoded as a string
+        * ``badValue`` - the value used in the configuration (invalid value), encoded as a string
+        * ``supportedValues`` - an array of strings, the values that are supported for this parameter
+* Missing Options - when a subset of the options for the tool were not provided
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$MissingOptions``
+    * ``missingKeys`` - an array of strings encoding option keys that are required and were not set
+* Invalid Options - when a subset of the options for the tool are not allowed or the values for some allowed options are invalid
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$InvalidOptions``
+    * ``options`` - an array of objects that encode invalid option values. These should use the following fields:
+        * ``optionName`` - the name of the option that was set with an invalid value, encoded as a string
+        * ``badValue`` - the invalid value that was set for the option
+        * ``supportedValues`` - an array of strings, the values that are supported for the option
+* File Error - when a file cannot be found, opened or analysed
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$FileError``
+* Missing Artifacts - when the compilation artifacts cannot be found (only for tools that need these)
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$MissingArtifacts``
+    * ``supported`` - an array of strings containing the supported locations for the artifacts
+* Invalid Artifacts - when the compilation artifacts are invalid
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$InvalidArtifacts``
+    * ``paths`` - an array of strings containing paths to invalid artifacts
+* Timed Out - when the tool execution failed due to a timeout
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$TimedOut``
+    * ``timeout`` - an object encoding the timeout value. This object should support the following fields:
+       * ``length`` - an integer encoded value for the length of the timeout
+       * ``unit`` - a string encoded value for the unit of time of the timeout. Must be one of "NANOSECONDS", "MICROSECONDS", "MILLISECONDS", "SECONDS", "MINUTES", "HOURS", "DAYS"
+* Other Reason - to encode other reasons that caused some error/warning
+    * ``$type`` - ``com.codacy.plugins.api.docker.v2.Problem$Reason$OtherReason``
+    * ``message`` - a string encoded, human-readable description of the problem
+    * ``output`` - optional property, intended to encode a generic error output
+    * ``stacktrace`` - optional property, intended to encode a stacktrace 
+
 
 > The filename should not include the prefix `/src/`
 > Example:

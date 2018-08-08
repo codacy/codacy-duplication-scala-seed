@@ -1,13 +1,12 @@
 package com.codacy.duplication.scala.seed
 
 import better.files.File
+import com.codacy.plugins.api.Implicits._
 import com.codacy.plugins.api.Options
-import com.codacy.plugins.api.duplication.DuplicationTool.CodacyConfiguration
+import com.codacy.plugins.api.duplication.DuplicationTool
 import com.codacy.plugins.api.languages.Languages
 import org.specs2.mutable.Specification
-import play.api.libs.json.Json
 
-import scala.collection.immutable.HashMap
 import scala.util.Try
 
 class DockerDuplicationEnvironmentSpecs extends Specification {
@@ -15,26 +14,28 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
   "DockerDuplicationEnvironment" should {
 
     val dockerDuplicationEnvironment = new DockerDuplicationEnvironment
+    val duplicationConfiguration =
+      DuplicationTool.CodacyConfiguration(
+        Some(Languages.Scala),
+        Some(Map(Options.Key("ping") -> Options.Value("pong"), Options.Key("foo") -> Options.Value("bar"))))
+    val duplicationConfigurationJsonStr = """{"language":"Scala","params":{"ping":"pong","foo":"bar"}}"""
 
     "get the duplication configuration for the tool, given a valid json file (must read from main source)" in {
       //given
       (for {
         tempFile <- File.temporaryFile()
       } yield {
-        val duplicationConfiguration =
-          CodacyConfiguration(
-            Some(Languages.Scala),
-            Some(Map(Options.Key("ping") -> Options.Value("pong"), Options.Key("foo") -> Options.Value("bar"))))
-        tempFile.write(Json.stringify(Json.toJson(duplicationConfiguration)))
+
+        tempFile.write(duplicationConfigurationJsonStr)
 
         val configPath = tempFile.path
         val notConfigPath = tempFile.path.getRoot
         //when
-        val duplicationConfig: Try[CodacyConfiguration] =
+        val duplicationConfig: Try[DuplicationTool.CodacyConfiguration] =
           dockerDuplicationEnvironment.config(configPath, notConfigPath)
 
         //then
-        duplicationConfig must beSuccessfulTry[CodacyConfiguration](duplicationConfiguration)
+        duplicationConfig must beSuccessfulTry[DuplicationTool.CodacyConfiguration](duplicationConfiguration)
       }).get()
     }
 
@@ -43,20 +44,17 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
       (for {
         tempFile <- File.temporaryFile()
       } yield {
-        val duplicationConfiguration =
-          CodacyConfiguration(
-            Some(Languages.Scala),
-            Some(HashMap(Options.Key("ping") -> Options.Value("pong"), Options.Key("foo") -> Options.Value("bar"))))
-        tempFile.write(Json.stringify(Json.toJson(duplicationConfiguration)))
+
+        tempFile.write(duplicationConfigurationJsonStr)
 
         val configPath = tempFile.path
         val notConfigPath = tempFile.path.getRoot
         //when
-        val duplicationConfig: Try[CodacyConfiguration] =
+        val duplicationConfig: Try[DuplicationTool.CodacyConfiguration] =
           dockerDuplicationEnvironment.config(notConfigPath, configPath)
 
         //then
-        duplicationConfig must beSuccessfulTry[CodacyConfiguration](duplicationConfiguration)
+        duplicationConfig must beSuccessfulTry[DuplicationTool.CodacyConfiguration](duplicationConfiguration)
       }).get()
     }
 
@@ -88,7 +86,8 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
         dockerDuplicationEnvironment.config(nonExistentFile.path, srcFolder.path)
 
       //then
-      duplicationConfig must beSuccessfulTry[CodacyConfiguration](CodacyConfiguration(None, None))
+      duplicationConfig must beSuccessfulTry[DuplicationTool.CodacyConfiguration](
+        DuplicationTool.CodacyConfiguration(None, None))
     }
   }
 }

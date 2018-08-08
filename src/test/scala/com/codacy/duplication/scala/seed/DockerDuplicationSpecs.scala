@@ -3,9 +3,11 @@ package com.codacy.duplication.scala.seed
 import java.io.{ByteArrayOutputStream, PrintStream}
 
 import com.codacy.duplication.scala.seed.utils.FileHelper
-import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile, DuplicationTool}
+import com.codacy.plugins.api.docker.v2.DuplicationResult
+import com.codacy.plugins.api.duplication.DuplicationTool
 import com.codacy.plugins.api.languages.Language
 import com.codacy.plugins.api.{Options, Source}
+import com.codacy.plugins.api.Implicits._
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json
 
@@ -24,14 +26,14 @@ class DockerDuplicationSpecs extends Specification {
       val sourcePath = dockerDuplicationEnvironment.sourcePath.toString
       val duplication = "heeyyy, i'm duplicated"
       val duplicationCloneMock =
-        DuplicationClone(duplication,
-                         duplication.length,
-                         1,
-                         Seq(DuplicationCloneFile(s"$sourcePath/path/to/duplicated/file", 1, 2)))
-      val mockedDuplicationTool = new DuplicationTool {
+        DuplicationResult.Clone(duplication,
+                                duplication.length,
+                                1,
+                                Seq(DuplicationResult.CloneFile(s"$sourcePath/path/to/duplicated/file", 1, 2)))
+      val mockedDuplicationTool: DuplicationTool[DuplicationResult] = new DuplicationTool[DuplicationResult] {
         override def apply(source: Source.Directory,
                            language: Option[Language],
-                           options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
+                           options: Map[Options.Key, Options.Value]): Try[List[DuplicationResult.Clone]] = {
           Success(List(duplicationCloneMock))
         }
       }
@@ -59,10 +61,10 @@ class DockerDuplicationSpecs extends Specification {
       val outContent = new ByteArrayOutputStream()
       val printStream = new PrintStream(outContent)
       val failedMsg = s"Failed: ${Random.nextInt()}"
-      val mockedDuplicationTool = new DuplicationTool {
+      val mockedDuplicationTool: DuplicationTool[DuplicationResult] = new DuplicationTool[DuplicationResult] {
         override def apply(source: Source.Directory,
                            language: Option[Language],
-                           options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
+                           options: Map[Options.Key, Options.Value]): Try[List[DuplicationResult.Clone]] = {
           Failure(new Throwable(failedMsg))
         }
       }
@@ -89,10 +91,10 @@ class DockerDuplicationSpecs extends Specification {
       val timeOutValue = "2 seconds"
       val timeOutException = new TimeoutException(s"Duplication tool timed out after: $timeOutValue")
       val environment = new DockerDuplicationEnvironment(Map("DUPLICATION_TIMEOUT" -> timeOutValue))
-      val duplicationTool = new DuplicationTool {
+      val duplicationTool: DuplicationTool[DuplicationResult] = new DuplicationTool[DuplicationResult] {
         def apply(source: Source.Directory,
                   language: Option[Language],
-                  options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
+                  options: Map[Options.Key, Options.Value]): Try[List[DuplicationResult.Clone]] = {
           Thread.sleep(3.seconds.toMillis)
           Success(List.empty)
         }

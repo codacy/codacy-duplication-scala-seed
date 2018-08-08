@@ -5,7 +5,7 @@ import org.specs2.mutable.Specification
 import scala.concurrent.duration._
 import scala.concurrent.{Await, TimeoutException}
 
-class TimeoutableSpecs extends Specification with Timeoutable {
+class TimeoutableSpecs extends Specification with Delayed {
 
   "Timeout" should {
     "should throw exception" in {
