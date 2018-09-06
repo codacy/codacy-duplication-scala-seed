@@ -28,10 +28,9 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
         tempFile.write(Json.stringify(Json.toJson(duplicationConfiguration)))
 
         val configPath = tempFile.path
-        val notConfigPath = tempFile.path.getRoot
         //when
         val duplicationConfig: Try[CodacyConfiguration] =
-          dockerDuplicationEnvironment.config(configPath, notConfigPath)
+          dockerDuplicationEnvironment.configuration(configPath)
 
         //then
         duplicationConfig must beSuccessfulTry[CodacyConfiguration](duplicationConfiguration)
@@ -50,10 +49,9 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
         tempFile.write(Json.stringify(Json.toJson(duplicationConfiguration)))
 
         val configPath = tempFile.path
-        val notConfigPath = tempFile.path.getRoot
         //when
         val duplicationConfig: Try[CodacyConfiguration] =
-          dockerDuplicationEnvironment.config(notConfigPath, configPath)
+          dockerDuplicationEnvironment.configuration(configPath)
 
         //then
         duplicationConfig must beSuccessfulTry[CodacyConfiguration](duplicationConfiguration)
@@ -68,10 +66,9 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
         tempFile.write("{{invalid json}")
 
         val configPath = tempFile.path
-        val notConfigPath = tempFile.path.getRoot
         //when
         val duplicationConfig =
-          dockerDuplicationEnvironment.config(configPath, notConfigPath)
+          dockerDuplicationEnvironment.configuration(configPath)
 
         //then
         duplicationConfig must beFailedTry
@@ -81,11 +78,10 @@ class DockerDuplicationEnvironmentSpecs extends Specification {
     "get empty configuration if the configuration file doesn't exist" in {
       //given
       val nonExistentFile = File("nonExistentFile.nop")
-      val srcFolder = File.currentWorkingDirectory
 
       //when
       val duplicationConfig =
-        dockerDuplicationEnvironment.config(nonExistentFile.path, srcFolder.path)
+        dockerDuplicationEnvironment.configuration(nonExistentFile.path)
 
       //then
       duplicationConfig must beSuccessfulTry[CodacyConfiguration](CodacyConfiguration(None, None))

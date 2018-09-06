@@ -16,7 +16,7 @@ class ResultsPrinterSpecs extends Specification {
       val printStream = new PrintStream(outContent)
       val printer = new ResultsPrinter(printStream)
       val dockerDuplicationEnvironment = new DockerDuplicationEnvironment
-      val sourcePath = dockerDuplicationEnvironment.sourcePath.toString
+      val sourcePath = dockerDuplicationEnvironment.defaultSourcePath.toString
       val duplication = "heeyyy, i'm duplicated"
       val duplicationClone =
         DuplicationClone(duplication,
