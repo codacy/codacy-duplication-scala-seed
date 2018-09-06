@@ -1,9 +1,7 @@
 package com.codacy.plugins
 
 import com.codacy.plugins.api.Options.{Key, Value}
-import com.codacy.plugins.api.Source.File
-import com.codacy.plugins.api.duplication.DuplicationTool.CodacyConfiguration
-import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile}
+import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile, DuplicationTool}
 import com.codacy.plugins.api.languages.{Language, Languages}
 import play.api.libs.json._
 
@@ -21,9 +19,6 @@ package object api {
       }
     },
     Writes((v: Language) => JsString(v.name)))
-
-  implicit val fileFormat: OFormat[File] =
-    Json.format[File]
 
   implicit def configurationValueToJsValue(configValue: Value): JsValue = {
     configValue match {
@@ -65,7 +60,8 @@ package object api {
 
   implicit val dupCloneFileFmt: OFormat[DuplicationCloneFile] = Json.format[DuplicationCloneFile]
   implicit val dupCloneFmt: OFormat[DuplicationClone] = Json.format[DuplicationClone]
-  implicit val codacyCfgFmt: OFormat[CodacyConfiguration] = Json.format[CodacyConfiguration]
+  implicit val codacyCfgFmt: OFormat[DuplicationTool.CodacyConfiguration] =
+    Json.format[DuplicationTool.CodacyConfiguration]
 
 }
 

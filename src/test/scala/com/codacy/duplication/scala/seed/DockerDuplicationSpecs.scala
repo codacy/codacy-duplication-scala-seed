@@ -21,7 +21,7 @@ class DockerDuplicationSpecs extends Specification {
       val outContent = new ByteArrayOutputStream()
       val printStream = new PrintStream(outContent)
       val dockerDuplicationEnvironment = new DockerDuplicationEnvironment
-      val sourcePath = dockerDuplicationEnvironment.sourcePath.toString
+      val sourcePath = dockerDuplicationEnvironment.defaultSourcePath.toString
       val duplication = "heeyyy, i'm duplicated"
       val duplicationCloneMock =
         DuplicationClone(duplication,
