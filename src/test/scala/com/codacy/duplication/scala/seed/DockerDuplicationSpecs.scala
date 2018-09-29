@@ -9,7 +9,6 @@ import com.codacy.plugins.api.{Options, Source}
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json
 
-import scala.concurrent.TimeoutException
 import scala.concurrent.duration._
 import scala.util.{Failure, Random, Success, Try}
 
@@ -86,9 +85,11 @@ class DockerDuplicationSpecs extends Specification {
       //given
       val outContent = new ByteArrayOutputStream()
       val printStream = new PrintStream(outContent)
+
       val timeOutValue = "2 seconds"
-      val timeOutException = new TimeoutException(s"Duplication tool timed out after: $timeOutValue")
-      val environment = new DockerDuplicationEnvironment(Map("DUPLICATION_TIMEOUT" -> timeOutValue))
+      val timeOutMsg = s"A timeout halt should happen after $timeOutValue."
+
+      val environment = new DockerDuplicationEnvironment(Map("TIMEOUT" -> timeOutValue))
       val duplicationTool = new DuplicationTool {
         def apply(source: Source.Directory,
                   language: Option[Language],
@@ -97,16 +98,22 @@ class DockerDuplicationSpecs extends Specification {
           Success(List.empty)
         }
       }
+
       val dockerDuplication =
         new DockerDuplication(tool = duplicationTool, environment = environment)(
           printer = new ResultsPrinter(logStream = printStream)) {
           override def halt(status: Int): Unit = {
-            throw timeOutException
+            if (status == 2) {
+              printStream.print(timeOutMsg)
+            }
           }
         }
 
-      //when and then
-      dockerDuplication.main(Array.empty) must throwA(timeOutException)
+      //when
+      dockerDuplication.main(Array.empty)
+
+      //then
+      outContent.toString must beEqualTo(s"$timeOutMsg")
     }
   }
 }
