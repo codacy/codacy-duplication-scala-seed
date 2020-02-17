@@ -1,53 +1,21 @@
-import sbt.Keys._
-import sbt._
+val scala212 = "2.12.10"
+val scala213 = "2.13.1"
+organization := "com.codacy"
+scalaVersion := scala212
+crossScalaVersions := Seq(scala212, scala213)
+name := "codacy-duplication-scala-seed"
+libraryDependencies ++= Seq("com.typesafe.play" %% "play-json" % "2.8.1",
+                            "com.codacy" %% "codacy-plugins-api" % "4.0.2" withSources (),
+                            "com.github.pathikrit" %% "better-files" % "3.8.0",
+                            "org.specs2" %% "specs2-core" % "4.8.0" % Test)
 
-val scalaBinaryVersionNumber = "2.12"
-val scalaVersionNumber = s"$scalaBinaryVersionNumber.4"
+// HACK: This setting is not picked up properly from the plugin
+pgpPassphrase := Option(System.getenv("SONATYPE_GPG_PASSPHRASE")).map(_.toCharArray)
 
-lazy val codacyDuplicationScalaSeed = project
-  .in(file("."))
-  .settings(
-    inThisBuild(
-      List(organization := "com.codacy",
-           scalaVersion := scalaVersionNumber,
-           version := "0.1.0-SNAPSHOT",
-           scalacOptions ++= Common.compilerFlags,
-           scalacOptions in Test ++= Seq("-Yrangepos"),
-           scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"))),
-    name := "codacy-duplication-scala-seed",
-    // App Dependencies
-    libraryDependencies ++= Seq(Dependencies.playJson, Dependencies.codacyPluginsApi, Dependencies.betterFiles),
-    // Test Dependencies
-    libraryDependencies ++= Dependencies.specs2.map(_ % Test))
+scmInfo := Some(
+  ScmInfo(url("https://github.com/codacy/codacy-duplication-scala-seed"),
+          "scm:git:git@github.com:codacy/codacy-duplication-scala-seed.git"))
 
-// Scapegoat
-scalaVersion in ThisBuild := scalaVersionNumber
-scalaBinaryVersion in ThisBuild := scalaBinaryVersionNumber
-scapegoatDisabledInspections in ThisBuild := Seq()
-scapegoatVersion in ThisBuild := "1.3.5"
-
-// Sonatype repository settings
-credentials += Credentials("Sonatype Nexus Repository Manager",
-                           "oss.sonatype.org",
-                           sys.env.getOrElse("SONATYPE_USER", "username"),
-                           sys.env.getOrElse("SONATYPE_PASSWORD", "password"))
-
-publishMavenStyle := true
-publishArtifact in Test := false
-pomIncludeRepository := { _ =>
-  false
-}
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (version.value.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
-
-organizationName := "Codacy"
-organizationHomepage := Some(new URL("https://www.codacy.com"))
-startYear := Some(2016)
 description := "Library to develop Codacy duplication plugins"
 licenses := Seq("The Apache Software License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 homepage := Some(url("http://www.github.com/codacy/codacy-duplication-scala-seed/"))
@@ -83,3 +51,5 @@ pomExtra :=
         <url>https://github.com/pedrocodacy</url>
       </developer>
     </developers>
+
+publicMvnPublish

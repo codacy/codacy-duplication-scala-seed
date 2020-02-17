@@ -12,15 +12,15 @@ class CommandRunnerSpecs extends Specification {
     "simpleEchoExec" in {
       val result: Either[Throwable, CommandResult] = CommandRunner.exec(genericCMD)
 
-      result.right.map(_.stdout) must beRight(===(List("foo")))
-      result.right.map(_.exitCode) must beRight(0)
+      result.map(_.stdout) must beRight(===(List("foo")))
+      result.map(_.exitCode) must beRight(0)
     }
 
     "handleInvalidExec" in {
       val result: Either[Throwable, CommandResult] = CommandRunner.exec(invalidCMD)
 
-      result.right.map(_.stdout) must beRight(===(List.empty[String]))
-      result.right.map(_.exitCode) must beRight(1)
+      result.map(_.stdout) must beRight(===(List.empty[String]))
+      result.map(_.exitCode) must beRight(1)
     }
 
     "handleErrorExec" in {
