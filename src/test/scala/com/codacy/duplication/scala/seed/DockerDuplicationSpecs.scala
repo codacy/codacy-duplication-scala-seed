@@ -86,10 +86,10 @@ class DockerDuplicationSpecs extends Specification {
       val outContent = new ByteArrayOutputStream()
       val printStream = new PrintStream(outContent)
 
-      val timeOutValue = "2 seconds"
-      val timeOutMsg = s"A timeout halt should happen after $timeOutValue."
+      val timeOutValue = "2"
+      val timeOutMsg = s"A timeout halt should happen after $timeOutValue seconds."
 
-      val environment = new DockerDuplicationEnvironment(Map("TIMEOUT" -> timeOutValue))
+      val environment = new DockerDuplicationEnvironment(Map("TIMEOUT_SECONDS" -> timeOutValue))
       val duplicationTool = new DuplicationTool {
         def apply(source: Source.Directory,
                   language: Option[Language],
