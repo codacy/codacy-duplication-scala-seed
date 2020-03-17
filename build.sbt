@@ -19,32 +19,5 @@ scmInfo := Some(
 description := "Library to develop Codacy duplication plugins"
 licenses := Seq("The Apache Software License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 homepage := Some(url("http://www.github.com/codacy/codacy-duplication-scala-seed/"))
-pomExtra :=
-  <developers>
-    <developer>
-      <id>rtfpessoa</id>
-      <name>Rodrigo Fernandes</name>
-      <email>rodrigo [at] codacy.com</email>
-      <url>https://github.com/rtfpessoa</url>
-    </developer>
-    <developer>
-      <id>bmbferreira</id>
-      <name>Bruno Ferreira</name>
-      <email>bruno.ferreira [at] codacy.com</email>
-      <url>https://github.com/bmbferreira</url>
-    </developer>
-    <developer>
-      <id>xplosunn</id>
-      <name>Hugo Sousa</name>
-      <email>hugo [at] codacy.com</email>
-      <url>https://github.com/xplosunn</url>
-    </developer>
-    <developer>
-      <id>pedrocodacy</id>
-      <name>Pedro Amaral</name>
-      <email>pamaral [at] codacy.com</email>
-      <url>https://github.com/pedrocodacy</url>
-    </developer>
-  </developers>
 
 publicMvnPublish
