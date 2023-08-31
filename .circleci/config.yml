@@ -10,16 +10,10 @@ workflows:
       - codacy/checkout_and_version:
           write_sbt_version: true
       - codacy/sbt:
-          name: compile_test
+          name: compile_and_test
           cmd: |
-            sbt "set scalafmtUseIvy in ThisBuild := false;
-                 scalafmt::test;
-                 test:scalafmt::test;
-                 sbt:scalafmt::test;
-                 +test;
-                 coverage;
-                 coverageReport"
-            bash <(curl -Ls https://coverage.codacy.com/get.sh) report --skip
+            sbt scalafmtSbtCheck scalafmtCheckAll
+            sbt +test
           persist_to_workspace: true
           requires:
             - codacy/checkout_and_version
@@ -29,7 +23,7 @@ workflows:
           cmd: |
             sbt retrieveGPGKeys +publishSigned sonatypeBundleRelease
           requires:
-            - compile_test
+            - compile_and_test
           filters:
             branches:
               only:
