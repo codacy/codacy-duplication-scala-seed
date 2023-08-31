@@ -11,20 +11,9 @@ workflows:
           write_sbt_version: true
       - codacy/sbt:
           name: compile_and_test
-          steps:
-            - run:
-                name: Check Scalafmt Sbt
-                command: sbt scalafmtSbtCheck
-            - run:
-                name: Check Scalafmt Sources
-                command: sbt scalafmtCheckAll
-            - run:
-                name: Compile
-                command: sbt +Test/compile
-            - run:
-                name: Test
-                command: sbt +test
-          use_sbt_native_client: true
+          cmd: |
+            sbt scalafmtSbtCheck scalafmtCheckAll
+            sbt +test
           persist_to_workspace: true
           requires:
             - codacy/checkout_and_version

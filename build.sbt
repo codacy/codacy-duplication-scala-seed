@@ -4,7 +4,7 @@ scalaVersion := scala213
 crossScalaVersions := Seq(scala213)
 name := "codacy-duplication-scala-seed"
 libraryDependencies ++= Seq("com.typesafe.play" %% "play-json" % "2.8.1",
-                            "com.codacy" %% "codacy-plugins-api" % "7.2.1" withSources (),
+                            "com.codacy" %% "codacy-plugins-api" % "7.2.1",
                             "com.github.pathikrit" %% "better-files" % "3.8.0",
                             "org.specs2" %% "specs2-core" % "4.8.0" % Test)
 
