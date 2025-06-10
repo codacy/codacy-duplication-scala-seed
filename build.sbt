@@ -1,5 +1,5 @@
-val scala212 = "2.12.10"
-val scala213 = "2.13.1"
+val scala212 = "2.12.20"
+val scala213 = "2.13.11"
 organization := "com.codacy"
 scalaVersion := scala212
 crossScalaVersions := Seq(scala212, scala213)

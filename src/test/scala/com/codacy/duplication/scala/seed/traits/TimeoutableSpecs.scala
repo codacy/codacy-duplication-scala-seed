@@ -1,5 +1,6 @@
 package com.codacy.duplication.scala.seed.traits
 
+import org.specs2.matcher.ResultMatchers.beSuccessful
 import org.specs2.mutable.Specification
 
 import scala.concurrent.duration._
@@ -21,7 +22,7 @@ class TimeoutableSpecs extends Specification with Timeoutable {
         success("Await.result didn't throw a scala.concurrent.TimeoutException")
       }
 
-      Await.result(f, Duration.Inf) must not(throwA[TimeoutException])
+      Await.result(f, Duration.Inf) must beSuccessful
     }
   }
 }
