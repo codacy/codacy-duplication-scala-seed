@@ -20,4 +20,4 @@ description := "Library to develop Codacy duplication plugins"
 licenses := Seq("The Apache Software License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 homepage := Some(url("http://www.github.com/codacy/codacy-duplication-scala-seed/"))
 
-publicMvnPublish
+privateMvnPublish
